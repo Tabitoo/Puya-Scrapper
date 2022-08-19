@@ -2,9 +2,9 @@ from selenium import webdriver
 from dotenv import load_dotenv
 import os
 import pandas as pd
+from sheets_api.spreadsheetsFunctions import appendCells
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-
 
 #Take environment variables from .env
 load_dotenv()
@@ -16,9 +16,9 @@ options.headless = True
 
 service = Service(executable_path=str(path))
 driver = webdriver.Chrome(service=service, options=options)
-nameList = []
-hashList = []
-
+#nameList = []
+#hashList = []
+animeData = []
 
 website = 'https://nyaa.si/user/puyero?p=1'
 driver.get(website)
@@ -30,16 +30,16 @@ for line in trList:
     title = line.find_element(by="xpath", value='./td[@colspan="2"]/a[not(@class="comments")]')
     link = line.find_elements(by="xpath", value='./td[@class="text-center"]/a')
 
-    nameList.append(title.text)
-    hashList.append(link[1].get_attribute("href")[20:60])
+    #nameList.append(title.text)
+    #hashList.append(link[1].get_attribute("href")[20:60])
 
-animeData = { "tittle" : nameList, "hash" : hashList}
+    animeData.append({"tittle" : title.text, "hash" : link[1].get_attribute("href")[20:60]})
 
-csv_test = pd.DataFrame(animeData)
-csv_test.to_csv("puyasubs-hash.csv")
+
+appendCells(animeData)
+
 
 driver.quit()
-
 
 
 
