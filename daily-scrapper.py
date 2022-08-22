@@ -1,13 +1,15 @@
 from selenium import webdriver
 from dotenv import load_dotenv
 import os
-import pandas as pd
-from sheets_api.spreadsheetsFunctions import appendCells
+from utils.utils import filterData
+from sheets_api.spreadsheetsFunctions import appendCells, getRange
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 #Take environment variables from .env
 load_dotenv()
+
+rangeData = getRange('B7501:B7576')
 
 path = os.getenv("DRIVER_PATH")
 
@@ -16,11 +18,9 @@ options.headless = True
 
 service = Service(executable_path=str(path))
 driver = webdriver.Chrome(service=service, options=options)
-#nameList = []
-#hashList = []
 animeData = []
 
-website = 'https://nyaa.si/user/puyero?p=1'
+website = 'https://nyaa.si/user/puyero?p=2'
 driver.get(website)
 
 trList = driver.find_elements(by = "xpath", value='//tbody/tr')
@@ -30,16 +30,14 @@ for line in trList:
     title = line.find_element(by="xpath", value='./td[@colspan="2"]/a[not(@class="comments")]')
     link = line.find_elements(by="xpath", value='./td[@class="text-center"]/a')
 
-    #nameList.append(title.text)
-    #hashList.append(link[1].get_attribute("href")[20:60])
+    data_exist = filterData(rangeData, title.text)
 
-    animeData.append({"tittle" : title.text, "hash" : link[1].get_attribute("href")[20:60]})
-
+    if not data_exist:
+        animeData.append({"tittle" : title.text, "hash" : link[1].get_attribute("href")[20:60]})
+    else:
+        continue
 
 appendCells(animeData)
 
-
 driver.quit()
-
-
 

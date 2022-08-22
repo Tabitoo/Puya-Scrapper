@@ -4,7 +4,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SERVICE_ACCOUNT_FILE = './credentials/keys.json'
 
@@ -33,6 +32,16 @@ def getLastId():
 
 
     return lastId
+
+
+def getTotalRows():
+
+    request = sheetService.get(spreadsheetId=SPREADSHEET_ID).execute()
+
+    totalRows = request.get('sheets', [])[0].get('properties').get('gridProperties').get('rowCount', [])
+    
+    return totalRows
+
 
 def appendCells(animeData):
 
@@ -71,4 +80,11 @@ def appendCells(animeData):
 
     return request
 
+
+def getRange(range: str):
+
+    rangeData = sheetService.values().get(spreadsheetId=SPREADSHEET_ID, range=range).execute()
+
+
+    return rangeData.get('values')
 
