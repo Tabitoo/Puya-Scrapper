@@ -9,7 +9,6 @@ from selenium.webdriver.chrome.options import Options
 #Take environment variables from .env
 load_dotenv()
 
-
 path = os.getenv("DRIVER_PATH")
 
 options = Options()
@@ -19,7 +18,7 @@ service = Service(executable_path=str(path))
 driver = webdriver.Chrome(service=service, options=options)
 nameList = []
 hashList = []
-pages = range(10)
+pages = range(100)
 
 for page in reversed(pages):
 

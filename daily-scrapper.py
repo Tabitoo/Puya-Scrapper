@@ -26,7 +26,7 @@ service = Service(executable_path=str(path))
 driver = webdriver.Chrome(service=service, options=options)
 animeData = []
 
-website = 'https://nyaa.si/user/puyero?p=2'
+website = 'https://nyaa.si/user/puyero?p=1'
 driver.get(website)
 
 trList = driver.find_elements(by = "xpath", value='//tbody/tr')
