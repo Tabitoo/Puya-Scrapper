@@ -2,14 +2,20 @@ from selenium import webdriver
 from dotenv import load_dotenv
 import os
 from utils.utils import filterData
-from sheets_api.spreadsheetsFunctions import appendCells, getRange
+from sheets_api.spreadsheetsFunctions import appendCells, getRange, getTotalRows
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 #Take environment variables from .env
 load_dotenv()
 
-rangeData = getRange('B7501:B7576')
+#Get the total rows an generate a range
+
+totalRows = getTotalRows()
+
+rangeSearch = f'B{totalRows - 75}:B{totalRows}'
+
+rangeData = getRange(rangeSearch)
 
 path = os.getenv("DRIVER_PATH")
 
@@ -37,7 +43,8 @@ for line in trList:
     else:
         continue
 
-appendCells(animeData)
+if len(animeData) > 0:
+    appendCells(animeData)
 
 driver.quit()
 
