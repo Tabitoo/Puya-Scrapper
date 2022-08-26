@@ -1,6 +1,7 @@
 from selenium import webdriver
 from dotenv import load_dotenv
 import os
+from kitsu.getAnime import getByName
 from utils.utils import filterData
 from sheets_api.spreadsheetsFunctions import appendCells, getRange, getTotalRows
 from selenium.webdriver.chrome.service import Service
@@ -9,8 +10,10 @@ from selenium.webdriver.chrome.options import Options
 #Take environment variables from .env
 load_dotenv()
 
-#Get the total rows an generate a range
+getByName('prubea')
 
+#Get the total rows an generate a range
+"""
 totalRows = getTotalRows()
 
 rangeSearch = f'B{totalRows - 75}:B{totalRows}'
@@ -47,4 +50,4 @@ if len(animeData) > 0:
     appendCells(animeData)
 
 driver.quit()
-
+"""
