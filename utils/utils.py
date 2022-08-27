@@ -24,7 +24,7 @@ def filter_puya_name(name: str) -> str:
 
 def convert_split_name(name: list):
 
-    for index, word in name:
+    for index, word in enumerate(name):
         
         indice_coma = word.find(",")
 
@@ -38,5 +38,21 @@ def convert_split_name(name: list):
 
         if indice_punto != -1:
             name[index] = word[:indice_punto]
+
+    return name
+
+def compare_names(puya_name: list, kitsu_name: list, len_name: int) -> bool:
+
+    equals_points = 0
+
+    for index, word in enumerate(kitsu_name):
+        if word == puya_name[index]:
+            equals_points = equals_points + 1
+
+    if equals_points == len_name:
+        return True  
+    else:
+        return False
+
 
 
