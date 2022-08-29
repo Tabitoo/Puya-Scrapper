@@ -1,7 +1,7 @@
 import requests
-from utils.utils import filter_puya_name, convert_split_name, compare_names
+from utils.utils import filter_puya_name, convert_split_name, compare_names, get_chapter
 
-def getByName(name: str):
+def getByName(animeTitle: str):
 
     #Usar el metodo split para separar el nombre de un anime y los datos que pone puyasub en el titulo
     #Quitar las ultimas tres posiciones del array que retorna el split,
@@ -9,8 +9,8 @@ def getByName(name: str):
     equals_name_validation = False
     kitsu_id = "null"
 
-    newName = filter_puya_name("[PuyaSubs!] Yowai 5000-nen no Soushoku Dragon - Iwarenaki Jaryuu Nintei - 05 [ESP-ENG][720p][84DACA8F].mkv")
-    
+    newName = filter_puya_name(animeTitle)
+
     splitName = newName.split(" ")
 
     convert_name = convert_split_name(splitName)
@@ -23,24 +23,43 @@ def getByName(name: str):
 
     for anime in animeData:
 
-        kitsuName = anime.get('attributes').get('titles').get("en_jp")
+        kitsuName_en_jp = anime.get('attributes').get('titles').get("en_jp") 
+        kitsuName_en = anime.get('attributes').get('titles').get("en")
+        
+        if kitsuName_en_jp and kitsuName_en is None:
+            break
 
-        kitsuSplitName = kitsuName.split(" ")
+        if kitsuName_en_jp is None:
+            kitsuName_en_jp = "null"
 
-        kitsuSplitName = convert_split_name(kitsuSplitName)
+        if kitsuName_en is None:
+            kitsuName_en = "null"
+            print(f'kitsuName_en desde el elif: {kitsuName_en}')
 
-        kitsu_len_name = len(kitsuSplitName)
+        print(f'kitsuName_en desde fuera del elif: {kitsuName_en}')
+        print(f'k1tsuName_en_jp desde fuera del elif: {kitsuName_en_jp}')
 
-        if not kitsu_len_name == puya_len_name:
+        kitsuSplitName_en_jp = kitsuName_en_jp.split(" ")
+
+        kitsuSplitName_en_jp = convert_split_name(kitsuSplitName_en_jp)
+
+        kitsuSplitName_en = kitsuName_en.split(" ")
+
+        kitsuSplitName_en = convert_split_name(kitsuSplitName_en)
+
+        kitsu_len_name_en_jp = len(kitsuSplitName_en_jp)
+        kitsu_len_name_en = len(kitsuSplitName_en)
+
+        if not kitsu_len_name_en_jp == puya_len_name and kitsu_len_name_en == puya_len_name:
             continue 
 
-        equals_name_validation = compare_names(convert_name, kitsuSplitName, puya_len_name)
+        equals_name_validation = compare_names(convert_name, kitsuSplitName_en_jp, kitsuSplitName_en, puya_len_name)
 
         if equals_name_validation:
             kitsu_id = anime.get('id')
             break
 
-    print(kitsu_id)
+    return kitsu_id
 
 def getById(id) -> dict:
 

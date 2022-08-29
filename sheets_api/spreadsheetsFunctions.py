@@ -60,7 +60,9 @@ def appendCells(animeData):
         valuesList = [
             {"userEnteredValue": {"numberValue": lastId }},
             {"userEnteredValue": {"stringValue" : anime.get("tittle")}},
-            {"userEnteredValue": {"stringValue": anime.get("hash")}}
+            {"userEnteredValue": {"stringValue": anime.get("hash")}},
+            {"userEnteredValue": {"stringValue": anime.get("chapter")}},
+            {"userEnteredValue": {"stringValue": anime.get("kitsu_id")}}
         ]
 
         rowsList.append({"values": valuesList})

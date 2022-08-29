@@ -2,7 +2,7 @@ from selenium import webdriver
 from dotenv import load_dotenv
 import os
 from kitsu.getAnime import getByName
-from utils.utils import filterData
+from utils.utils import filterData, get_chapter
 from sheets_api.spreadsheetsFunctions import appendCells, getRange, getTotalRows
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -10,10 +10,8 @@ from selenium.webdriver.chrome.options import Options
 #Take environment variables from .env
 load_dotenv()
 
-getByName('prubea')
 
 #Get the total rows an generate a range
-"""
 totalRows = getTotalRows()
 
 rangeSearch = f'B{totalRows - 75}:B{totalRows}'
@@ -42,12 +40,18 @@ for line in trList:
     data_exist = filterData(rangeData, title.text)
 
     if not data_exist:
-        animeData.append({"tittle" : title.text, "hash" : link[1].get_attribute("href")[20:60]})
+        
+        kitsu_id = getByName(title.text)
+
+        chapter = get_chapter(title.text)
+
+        animeData.append({"tittle" : title.text, "hash" : link[1].get_attribute("href")[20:60], "chapter" : chapter, "kitsu_id" : kitsu_id})
+
     else:
+
         continue
 
 if len(animeData) > 0:
     appendCells(animeData)
 
 driver.quit()
-"""
