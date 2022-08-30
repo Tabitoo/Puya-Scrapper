@@ -10,7 +10,6 @@ from selenium.webdriver.chrome.options import Options
 #Take environment variables from .env
 load_dotenv()
 
-
 #Get the total rows an generate a range
 totalRows = getTotalRows()
 
@@ -22,6 +21,7 @@ path = os.getenv("DRIVER_PATH")
 
 options = Options()
 options.headless = True
+
 
 service = Service(executable_path=str(path))
 driver = webdriver.Chrome(service=service, options=options)

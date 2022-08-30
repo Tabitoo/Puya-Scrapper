@@ -21,12 +21,14 @@ def getByName(animeTitle: str):
 
     animeData = response.json().get('data')
 
+    print('print antes del for')
+
     for anime in animeData:
 
         kitsuName_en_jp = anime.get('attributes').get('titles').get("en_jp") 
         kitsuName_en = anime.get('attributes').get('titles').get("en")
         
-        if kitsuName_en_jp and kitsuName_en is None:
+        if kitsuName_en_jp is None and kitsuName_en is None:
             break
 
         if kitsuName_en_jp is None:
@@ -50,7 +52,7 @@ def getByName(animeTitle: str):
         kitsu_len_name_en_jp = len(kitsuSplitName_en_jp)
         kitsu_len_name_en = len(kitsuSplitName_en)
 
-        if not kitsu_len_name_en_jp == puya_len_name and kitsu_len_name_en == puya_len_name:
+        if not kitsu_len_name_en_jp == puya_len_name and not kitsu_len_name_en == puya_len_name:
             continue 
 
         equals_name_validation = compare_names(convert_name, kitsuSplitName_en_jp, kitsuSplitName_en, puya_len_name)
