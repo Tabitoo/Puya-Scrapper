@@ -11,15 +11,13 @@ credentials = None
 credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
 
-SPREADSHEET_ID = '1ilwVZ0nwA4yuE7s0gJ67x3xUcyI-PxNBSrFLnpMeHzk'
+SPREADSHEET_ID = '16banZYfpjBgy52j2MvrMzkyJqeoLDOB9_9WutJhVxG0'
 
-SHEET_ID = '1913774483'
-
+SHEET_ID = '463188584'
 
 
 service = build('sheets', 'v4', credentials=credentials)
 sheetService = service.spreadsheets()
-
 
 def getLastId():
 
@@ -32,7 +30,6 @@ def getLastId():
 
 
     return lastId
-
 
 def getTotalRows():
 

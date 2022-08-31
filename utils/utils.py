@@ -17,8 +17,6 @@ def filter_puya_name(name: str) -> str:
     newList = nameList[1:total - 3]
     newStr = " ".join(newList)
 
-    print(newStr)
-
     return newStr
 
 
@@ -69,9 +67,18 @@ def get_chapter(name: str):
 
     chapter = nameList[total - 2]
 
-    chapter = int(chapter)
+    try:
 
-    chapter = str(chapter)
+        if chapter.find(".") > -1:
+            chapter = float(chapter)
+        else:
+            chapter = int(chapter)
+
+        chapter = str(chapter)
+
+    except:
+        chapter = "null"
+
 
     return chapter
 

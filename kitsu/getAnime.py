@@ -21,8 +21,6 @@ def getByName(animeTitle: str):
 
     animeData = response.json().get('data')
 
-    print('print antes del for')
-
     for anime in animeData:
 
         kitsuName_en_jp = anime.get('attributes').get('titles').get("en_jp") 
@@ -36,10 +34,6 @@ def getByName(animeTitle: str):
 
         if kitsuName_en is None:
             kitsuName_en = "null"
-            print(f'kitsuName_en desde el elif: {kitsuName_en}')
-
-        print(f'kitsuName_en desde fuera del elif: {kitsuName_en}')
-        print(f'k1tsuName_en_jp desde fuera del elif: {kitsuName_en_jp}')
 
         kitsuSplitName_en_jp = kitsuName_en_jp.split(" ")
 
