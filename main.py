@@ -7,10 +7,15 @@ from utils.utils import get_chapter
 from kitsu.getAnime import getByName
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from deta import Deta
 
-
-#Take environment variables from .env
 load_dotenv()
+
+deta_key = os.getenv("DETA_BASE_KEY")
+
+deta = Deta(str(deta_key))
+
+db = deta.Base("puyasubs-hash")
 
 path = os.getenv("DRIVER_PATH")
 
@@ -20,10 +25,6 @@ options.headless = True
 service = Service(executable_path=str(path))
 driver = webdriver.Chrome(service=service, options=options)
 count = 0
-nameList = []
-hashList = []
-chapterList = []
-kitsu_id_list = []
 pages = range(100)
 
 for page in reversed(pages):
@@ -46,14 +47,7 @@ for page in reversed(pages):
         title = line.find_element(by="xpath", value='./td[@colspan="2"]/a[not(@class="comments")]')
         link = line.find_elements(by="xpath", value='./td[@class="text-center"]/a')
 
-        nameList.append(title.text)
-        hashList.append(link[1].get_attribute("href")[20:60])
-        chapterList.append(get_chapter(title.text))
-        kitsu_id_list.append(getByName(title.text))
+        db.put({"title" : title.text, "hash": link[1].get_attribute("href")[20:60], "chapter" : get_chapter(title.text), "kitsu_id" : getByName(title.text)})
 
-animeData = { "tittle" : nameList, "hash" : hashList, "chapter" : chapterList, "kitsu_id" : kitsu_id_list}
-
-csv_test = pd.DataFrame(animeData)
-csv_test.to_csv("puyasubs-hash.csv")
 
 driver.quit()

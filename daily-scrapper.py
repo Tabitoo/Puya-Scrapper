@@ -1,27 +1,26 @@
 from selenium import webdriver
 from dotenv import load_dotenv
 import os
+from deta import Deta
 from kitsu.getAnime import getByName
-from utils.utils import filterData, get_chapter
-from sheets_api.spreadsheetsFunctions import appendCells, getRange, getTotalRows
+from utils.utils import  get_chapter
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 #Take environment variables from .env
 load_dotenv()
 
-#Get the total rows an generate a range
-totalRows = getTotalRows()
+deta_key = os.getenv("DETA_BASE_KEY")
 
-rangeSearch = f'B{totalRows - 75}:B{totalRows}'
+deta = Deta(str(deta_key))
 
-rangeData = getRange(rangeSearch)
+db = deta.Base("puyasubs-hash")
+
 
 path = os.getenv("DRIVER_PATH")
 
 options = Options()
 options.headless = True
-
 
 service = Service(executable_path=str(path))
 driver = webdriver.Chrome(service=service, options=options)
@@ -37,21 +36,11 @@ for line in trList:
     title = line.find_element(by="xpath", value='./td[@colspan="2"]/a[not(@class="comments")]')
     link = line.find_elements(by="xpath", value='./td[@class="text-center"]/a')
 
-    data_exist = filterData(rangeData, title.text)
+    request_data = db.fetch({"title" : title.text})
 
-    if not data_exist:
-        
-        kitsu_id = getByName(title.text)
+    if not request_data.count >= 1:
 
-        chapter = get_chapter(title.text)
-
-        animeData.append({"tittle" : title.text, "hash" : link[1].get_attribute("href")[20:60], "chapter" : chapter, "kitsu_id" : kitsu_id})
-
-    else:
-
-        continue
-
-if len(animeData) > 0:
-    appendCells(animeData)
+        db.put({"title" : title.text, "hash": link[1].get_attribute("href")[20:60], "chapter" : get_chapter(title.text), "kitsu_id" : getByName(title.text)})
 
 driver.quit()
+
